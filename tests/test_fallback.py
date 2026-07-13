@@ -44,3 +44,12 @@ def test_long_text_without_sentence_end_is_truncated() -> None:
 
     assert len(result) == 500
     assert result.endswith("...")
+
+
+def test_truncated_text_does_not_end_with_four_dots() -> None:
+    text = ("Sentence. " * 80).strip()
+
+    result = summarize_locally(text, max_sentences=80)
+
+    assert result.endswith("...")
+    assert not result.endswith("....")

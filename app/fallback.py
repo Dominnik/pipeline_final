@@ -34,5 +34,5 @@ def _truncate(text: str, max_chars: int) -> str:
     if len(text) <= max_chars:
         return text
 
-    truncated = text[: max_chars - 3].rstrip()
+    truncated = text[: max_chars - 3].rstrip(".").rstrip()
     return f"{truncated}..."

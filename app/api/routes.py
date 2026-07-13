@@ -1,7 +1,9 @@
 import logging
+from functools import lru_cache
 
 from fastapi import APIRouter, Depends, Request
 
+from app.cache import TTLCache
 from app.core.config import Settings, get_settings
 from app.llm.client import OpenAILLMClient
 from app.schemas import (
@@ -29,11 +31,21 @@ def health(settings: Settings = Depends(get_settings)) -> HealthResponse:
     )
 
 
+@lru_cache
+def get_ttl_cache() -> TTLCache:
+    settings = get_settings()
+    return TTLCache(
+        ttl_seconds=settings.cache_ttl_seconds,
+        max_size=settings.cache_max_size,
+    )
+
+
 def get_summarization_service(
     settings: Settings = Depends(get_settings),
+    cache: TTLCache = Depends(get_ttl_cache),
 ) -> SummarizationService:
     llm_client = OpenAILLMClient(settings)
-    return SummarizationService(llm_client)
+    return SummarizationService(llm_client, settings=settings, cache=cache)
 
 
 @router.post("/v1/summarize", response_model=SummarizeResponse)

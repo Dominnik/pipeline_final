@@ -1,19 +1,21 @@
 .PHONY: install run test lint format-check check
 
+PYTHON ?= python3
+
 install:
-	python3 -m pip install -r requirements.txt -r requirements-dev.txt
+	$(PYTHON) -m pip install -r requirements.txt -r requirements-dev.txt
 
 run:
-	uvicorn app.main:app --reload
+	$(PYTHON) -m uvicorn app.main:app --reload
 
 test:
-	pytest
+	$(PYTHON) -m pytest
 
 lint:
-	ruff check .
+	$(PYTHON) -m ruff check .
 
 format-check:
-	ruff format --check .
+	$(PYTHON) -m ruff format --check .
 
 check: lint format-check test
-	python3 -m compileall app
+	$(PYTHON) -m compileall app
