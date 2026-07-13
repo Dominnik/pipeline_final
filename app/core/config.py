@@ -25,6 +25,7 @@ class Settings(BaseSettings):
 
     llm_timeout_seconds: float = Field(default=10.0, gt=0)
     llm_max_retries: int = Field(default=2, ge=0)
+    llm_max_output_tokens: int = Field(default=512, gt=0)
 
     cache_enabled: bool = True
     cache_ttl_seconds: int = Field(default=300, gt=0)
